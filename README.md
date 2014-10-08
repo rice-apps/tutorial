@@ -3,6 +3,12 @@ address-book-tutorial
 
 Super Duper Ultra Basic Introduction to Web Dev
 
+CHECKPOINT 5 - Python
+-communicate with DB
+-create three functions
+--GET, ADD, DELETE
+-test SQL communication
+
 CHECKPOINT 4 - SQL
 -create database
 -create root user
