@@ -2,30 +2,37 @@
  * Created by phrayezzen on 10/7/14.
  */
 
-var addContact = function() {
-  var name = $("#first").val() + " " + $("#last").val();
-  var phone = $("#phone").val();
-  var address = $("#address").val();
-  var city = $("#city").val();
-  var state = $("#state").val();
-  var zip = $("#zip").val();
-  $("tbody").append("<tr>" +
-    "<td>" + name + "</td>" +
-    "<td>" + phone + "</td>" +
-    "<td>" + address + "</td>" +
-    "<td>" + city + "</td>" +
-    "<td>" + state + "</td>" +
-    "<td>" + zip + "</td>" +
-    "<td><a href='#'>Delete</a></td>" +
-    "</tr>");
+var addResult = function(result) {
+  var contacts = result["result"];
+  for (var i = 0; i < contacts.length; i++) {
+    var contact = contacts[i];
+    for (var field in contact) {
+      if (contact.hasOwnProperty(field) && contact[field] === null) {
+        contact[field] = "";
+      }
+    }
+
+    $("tbody").append("<tr id='" + contact["contactId"] + "'>" +
+      "<td>" + contact["firstName"] + " " + contact["lastName"] + "</td>" +
+      "<td>" + contact["phone"] + "</td>" +
+      "<td>" + contact["address"] + "</td>" +
+      "<td>" + contact["city"] + "</td>" +
+      "<td>" + contact["state"] + "</td>" +
+      "<td>" + contact["zip"] + "</td>" +
+      "<td><a href='#'>Delete</a></td>" +
+      "</tr>");
+  }
 };
 
 $(document).ready(function() {
-  $("tbody").on("click", "a", function() {
-    $(this).closest("tr").remove();
-  });
+  $.getJSON("/getContacts", addResult);
 
   $("#add").on("click", function() {
-    addContact();
+    $.post("/addContact", $("form").serialize(), addResult);
+  });
+
+  $("tbody").on("click", "a", function() {
+    $.get("/deleteContact/" + $(this).closest("tr").attr("id"));
+    $(this).closest("tr").remove();
   });
 });
