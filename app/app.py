@@ -1,5 +1,6 @@
 __author__ = 'phrayezzen'
 
+from flask import Flask, request, jsonify
 import sqlite3 as lite
 """
 sqlite3 differences
@@ -8,21 +9,29 @@ change con row factory (not built in mdb.cursors.DictCursor)
 replace all %s with ?
 """
 
+app = Flask(__name__)
 con = lite.connect("test.db", check_same_thread=False)
 def make_dicts(cursor, row):
     return dict((cursor.description[idx][0], value)
                 for idx, value in enumerate(row))
-
 con.row_factory = make_dicts
 cur = con.cursor()
 
+@app.route("/")
+def index():
+    return app.send_static_file("index.html")
+
+@app.route("/getContacts")
 def get_contacts():
     with con:
         cur.execute("""SELECT * FROM contact""")
         rows = {"result": cur.fetchall()}
-        return rows
+        return jsonify(rows)
+    return jsonify({})
 
-def add_contact(f):
+@app.route("/addContact", methods = ["POST"])
+def add_contact():
+    f = request.form
     with con:
         cur.execute("""INSERT INTO contact (firstName, lastName, phone, address, city, state, zip)
                        VALUES (?, ?, ?, ?, ?, ?, ?)""",
@@ -30,22 +39,14 @@ def add_contact(f):
         con.commit()
         cur.execute("""SELECT * FROM contact WHERE contactId = ?""", (str(cur.lastrowid),))
         contact = {"result": [cur.fetchone()]}
-        return contact
+        return jsonify(contact)
+    return jsonify({})
 
+@app.route("/deleteContact/<int:contact_id>")
 def delete_contact(contact_id):
     with con:
         cur.execute("""DELETE FROM contact WHERE contactId = ?""", (str(contact_id),))
+    return "deleted " + str(contact_id)
 
-# add_contact({
-#     'first':'Xilin',
-#     'last':'Liu',
-#     'phone':'9107280992',
-#     'address':'1601 Rice Boulevard',
-#     'city':'Houston',
-#     'state':'TX',
-#     'zip':'77005'
-#     })
-
-# print get_contacts()
-
-# delete_contact(NUMBER)
+if __name__ == "__main__":
+    app.run(debug=True)
