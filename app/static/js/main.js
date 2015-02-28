@@ -19,20 +19,24 @@ var addResult = function(result) {
       "<td>" + contact["city"] + "</td>" +
       "<td>" + contact["state"] + "</td>" +
       "<td>" + contact["zip"] + "</td>" +
-      "<td><a href='#'>Delete</a></td>" +
+      "<td><button class='delete-btn btn btn-warning btn-xs'>Delete Contact</button></td>" +
       "</tr>");
   }
 };
 
 $(document).ready(function() {
-  $.getJSON("/getContacts", addResult);
+  $.getJSON("/contact", addResult);
 
   $("#add").on("click", function() {
-    $.post("/addContact", $("form").serialize(), addResult);
+    $.post("/contact", $("form").serialize(), addResult);
   });
 
-  $("tbody").on("click", "a", function() {
-    $.get("/deleteContact/" + $(this).closest("tr").attr("id"));
+  $("tbody").on("click", ".delete-btn", function() {
+    var deleteId = $(this).closest("tr").attr("id");
     $(this).closest("tr").remove();
+    $.ajax({
+      url: "/contact/" + deleteId,
+      type: 'DELETE'
+    });
   });
 });
