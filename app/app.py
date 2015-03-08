@@ -22,6 +22,7 @@ def index():
     return app.send_static_file("index.html")
 
 @app.route("/contact", methods=["GET", "POST"])
+
 def contact():
     if request.method == "GET":
         with con:
@@ -48,4 +49,8 @@ def delete_contact(contact_id):
     return "deleted " + str(contact_id)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+
+    app.run(host = "0.0.0.0")
+
+
+#10.119.76.234

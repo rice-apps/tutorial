@@ -34,9 +34,11 @@ $(document).ready(function() {
   $("tbody").on("click", ".delete-btn", function() {
     var deleteId = $(this).closest("tr").attr("id");
     $(this).closest("tr").remove();
-    $.ajax({
-      url: "/contact/" + deleteId,
-      type: 'DELETE'
-    });
+
+      $.ajax({
+          url: "/contact/" + deleteId,
+          type: "DELETE:"
+      });
+
   });
 });
