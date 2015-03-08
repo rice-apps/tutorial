@@ -19,7 +19,7 @@ var addResult = function(result) {
       "<td>" + contact["city"] + "</td>" +
       "<td>" + contact["state"] + "</td>" +
       "<td>" + contact["zip"] + "</td>" +
-      "<td><button class='delete-btn btn btn-warning btn=xs'>Delete Contact</button></td>" +
+      "<td><button class='delete-btn btn btn-warning btn-xs'>Delete Contact</button></td>" +
       "</tr>");
   }
 };
@@ -34,9 +34,11 @@ $(document).ready(function() {
   $("tbody").on("click", ".delete-btn", function() {
     var deleteId = $(this).closest("tr").attr("id");
     $(this).closest("tr").remove();
+
       $.ajax({
           url: "/contact/" + deleteId,
           type: "DELETE:"
       });
+
   });
 });
