@@ -27,14 +27,7 @@ def contact():
         with con:
             cur.execute("""SELECT * FROM contact""")
             rows = {"result": cur.fetchall()}
-            return jsonify(rows)
-        return jsonify({})
-    elif request.method == "POST":
-        f = request.form
-        with con:
-            cur.execute("""INSERT INTO contact (firstName, lastName, phone, address, city, state, zip)
-                           VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                           (f['first'], f['last'], f['phone'], f['address'], f['city'], f['state'], f['zip']))
+            r    (f['first'], f['last'], f['phone'], f['address'], f['city'], f['state'], f['zip']))
             con.commit()
             cur.execute("""SELECT * FROM contact WHERE contactId = ?""", (str(cur.lastrowid),))
             contact = {"result": [cur.fetchone()]}
